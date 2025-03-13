@@ -51,6 +51,8 @@ Route::namespace('Api')->name('api.')->group(function () {
             });
 
             Route::apiResource('tasks', 'Task\TaskController');
+            Route::get('kanban-data', 'Task\TaskController@getKanbanData');
+            Route::get('all-users', 'UsersController@getAllUsers');
         });
     });
 });

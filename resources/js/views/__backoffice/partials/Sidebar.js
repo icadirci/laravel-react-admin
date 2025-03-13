@@ -24,6 +24,7 @@ import {
     People as PeopleIcon,
     Security as SecurityIcon,
     ShowChart as ShowChartIcon,
+    ListAlt  as TasksIcon   
 } from '@material-ui/icons';
 
 import { APP } from '../../../config';
@@ -99,6 +100,20 @@ function Sidebar(props) {
                         </Tooltip>
                     ),
                     path: null,
+                },
+            ],
+        },
+
+        {
+            name: 'Tasks',
+            id: 'analytics',
+            links: [
+                {
+                    name: 'Tasks',
+                    icon: <TasksIcon />,
+                    path: NavigationUtils.route(
+                        'backoffice.resources.tasks.index',
+                    ),
                 },
             ],
         },

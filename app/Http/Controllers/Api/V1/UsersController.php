@@ -239,4 +239,12 @@ class UsersController extends Controller
             $users->where($property, _to_sql_operator($keyword), "{$value}");
         }
     }
+
+    /**
+     * 
+     */
+    public function getAllUsers()
+    {
+        return response()->json(User::select('id', 'name')->get());
+    }
 }

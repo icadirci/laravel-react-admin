@@ -98,4 +98,18 @@ class TaskController extends Controller
         Task::findOrFail($id)->delete();
         return response()->json(['message' => 'Task deleted']);
     }
+
+        /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getKanbanData()
+    {
+        return response()->json([
+            "pending" => Task::where('status', 'pending')->get(),
+            "in_progress" => Task::where('status', 'in_progress')->get(),
+            "completed" => Task::where('status', 'completed')->get()
+        ]);
+    }
 }

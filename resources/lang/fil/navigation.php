@@ -57,6 +57,7 @@ return [
     'resources' => 'Mga mapagkukunan',
     'users' => 'Mga gumagamit',
     'roles' => 'Mga tungkulin',
+    'tasks' => 'Tasks',
 
     'citation' => 'Binuo ng may ❤️ ni'
 ];
