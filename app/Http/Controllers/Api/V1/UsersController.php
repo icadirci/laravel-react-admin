@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -74,7 +74,7 @@ class UsersController extends Controller
      * Show a resource.
      *
      * @param Illuminate\Http\Request $request
-     * @param App\User $user
+     * @param App\Models\User $user
      *
      * @return Illuminate\Http\JsonResponse
      */
@@ -87,7 +87,7 @@ class UsersController extends Controller
      * Update a resource.
      *
      * @param Illuminate\Http\Request $request
-     * @param App\User $user
+     * @param App\Models\User $user
      *
      * @return Illuminate\Http\JsonResponse
      */
@@ -122,7 +122,7 @@ class UsersController extends Controller
      * Destroy a resource.
      *
      * @param Illuminate\Http\Request $request
-     * @param App\User $user
+     * @param App\Models\User $user
      *
      * @return Illuminate\Http\JsonResponse
      */
@@ -154,7 +154,7 @@ class UsersController extends Controller
      * Store the user's avatar.
      *
      * @param Illuminate\Http\Request $request
-     * @param App\User $user
+     * @param App\Models\User $user
      *
      * @return Illuminate\Http\JsonResponse
      */
@@ -171,7 +171,7 @@ class UsersController extends Controller
      * Destroy the user's avatar.
      *
      * @param Illuminate\Http\Request $request
-     * @param App\User $user
+     * @param App\Models\User $user
      *
      * @return Illuminate\Http\JsonResponse
      */

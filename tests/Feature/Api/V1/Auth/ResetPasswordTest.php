@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Api\V1\Auth;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Tests\Feature\Api\V1\BaseTest;
