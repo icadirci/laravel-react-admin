@@ -11,6 +11,7 @@
 |
 */
 
+
 Route::namespace('Api')->name('api.')->group(function () {
     Route::namespace('V1')->name('v1.')->prefix('v1')->group(function () {
         Route::namespace('Auth')->name('auth.')->prefix('auth')->group(function () {
@@ -48,6 +49,8 @@ Route::namespace('Api')->name('api.')->group(function () {
                     Route::delete('/', 'UsersController@destroyAvatar')->name('destroy');
                 });
             });
+
+            Route::apiResource('tasks', 'Task\TaskController');
         });
     });
 });
