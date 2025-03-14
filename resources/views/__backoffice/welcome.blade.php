@@ -89,6 +89,8 @@
             box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
             cursor: grab;
             font-size: :13px;
+            transition: 500ms;
+
         }
 
         /* Modal Stili */

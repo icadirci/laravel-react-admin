@@ -32,25 +32,7 @@ const taskRoutes = [
     {
         name: 'tasks.index',
         path: '/tasks',
-        component: Tasks.List,
-    },
-
-    {
-        name: 'tasks.create',
-        path: '/tasks/create',
-        component: Tasks.Create,
-    },
-
-    {
-        name: 'tasks.edit',
-        path: '/tasks/:id/edit',
-        component: Tasks.Edit,
-    },
-
-    {
-        name: 'tasks.kanban',
-        path: '/tasks/kanban',
-        component: Tasks.Kanban,
+        component: Tasks.Board,
     },
 ].map(route => {
     route.name = `resources.${route.name}`;

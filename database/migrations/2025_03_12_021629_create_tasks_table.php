@@ -21,7 +21,8 @@ class CreateTasksTable extends Migration
             $table->enum('status', ['pending', 'in_progress', 'completed'])->default('pending');
             $table->timestamp('start_time')->nullable();
             $table->timestamps();
-        
+            $table->softDeletes();
+
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

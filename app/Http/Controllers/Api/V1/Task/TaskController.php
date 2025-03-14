@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Task;
 
+use App\Events\TaskUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Task;
 use Illuminate\Http\Request;
@@ -75,7 +76,8 @@ class TaskController extends Controller
                 'status' => 'sometimes|required|in:pending,in_progress,completed',
                 'start_time' => 'sometimes|nullable|date',
             ]);
-    
+            broadcast(new TaskUpdated($task))->toOthers();
+
             $task->update($validated);
     
             return response()->json($task);
@@ -95,8 +97,9 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-        Task::findOrFail($id)->delete();
-        return response()->json(['message' => 'Task deleted']);
+$task = Task::find($id);
+$task->delete();
+return response()->json(['message' => 'Task deleted']);
     }
 
         /**

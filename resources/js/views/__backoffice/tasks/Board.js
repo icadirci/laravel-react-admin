@@ -4,8 +4,15 @@ import { Master as MasterLayout } from "../layouts";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Modal from "react-modal";
 import axios from "axios";
+import Pusher from "pusher-js";
 
 Modal.setAppElement("#root");
+
+// Pusher Bağlantısını Başlat
+const pusher = new Pusher("eb50313860f0fc342360", {
+    cluster: "eu",
+    encrypted: true
+});
 
 function List(props) {
     const [loading, setLoading] = useState(false);
@@ -17,6 +24,28 @@ function List(props) {
         axios.get("/api/v1/kanban-data")
             .then(response => setTasks(response.data))
             .catch(error => console.error("Görevler yüklenemedi:", error));
+    }, []);
+
+    useEffect(() => {
+        // Kanalı dinleme
+        const channel = pusher.subscribe("TaskUpdated");
+
+        channel.bind("task-updated", (data) => {
+            console.log("Task Güncellendi:", data);
+            setTasks((prevTasks) => {
+                const updatedTasks = { ...prevTasks };
+                Object.keys(updatedTasks).forEach((key) => {
+                    updatedTasks[key] = updatedTasks[key].filter(task => task.id !== data.id);
+                });
+                updatedTasks[data.status].push(data);
+                return updatedTasks;
+            });
+        });
+
+        return () => {
+            channel.unbind_all();
+            pusher.unsubscribe("TaskUpdated");
+        };
     }, []);
 
     const handleDragEnd = (result) => {
@@ -110,11 +139,9 @@ function List(props) {
             loading={loading}
             pageTitle={"Görevler"}
             primaryAction={primaryAction}
-
         >
             {!loading && (
                 <>
-
                     <DragDropContext onDragEnd={handleDragEnd}>
                         <div className="kanban-board">
                             {Object.keys(tasks).map(column => (
@@ -131,7 +158,6 @@ function List(props) {
                                                                 <button className="update-btn" onClick={() => openModal(task)}>Düzenle</button>
                                                                 <button className="delete-btn" onClick={() => handleDelete(task.id, column)}>Sil</button>
                                                             </div>
-                                                            
                                                         </div>
                                                     )}
                                                 </Draggable>
