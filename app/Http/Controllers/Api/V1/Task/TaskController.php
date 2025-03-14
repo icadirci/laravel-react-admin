@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Task;
 
+use App\Events\SendNotification;
 use App\Events\TaskUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Task;
@@ -37,6 +38,8 @@ class TaskController extends Controller
             ]);
 
             $task = Task::create($validated);
+            broadcast(new SendNotification($task, __('tasks.create_task', ['title' => $request->title])))->toOthers();
+
             return response()->json($task, 201);
         } catch (ValidationException $e) {
             return response()->json([
@@ -67,7 +70,7 @@ class TaskController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try{
+        try {
             $task = Task::findOrFail($id);
 
             $validated = $request->validate([
@@ -77,11 +80,12 @@ class TaskController extends Controller
                 'start_time' => 'sometimes|nullable|date',
             ]);
             broadcast(new TaskUpdated($task))->toOthers();
+            broadcast(new SendNotification($task, __('tasks.update_task', ['title' => $request->title])))->toOthers();
 
             $task->update($validated);
-    
+
             return response()->json($task);
-        }catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation Error',
                 'errors' => $e->validator->errors(),
@@ -97,12 +101,12 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-$task = Task::find($id);
-$task->delete();
-return response()->json(['message' => 'Task deleted']);
+        $task = Task::find($id);
+        $task->delete();
+        return response()->json(['message' => 'Task deleted']);
     }
 
-        /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

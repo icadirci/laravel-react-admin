@@ -8,7 +8,6 @@ import Pusher from "pusher-js";
 
 Modal.setAppElement("#root");
 
-// Pusher Bağlantısını Başlat
 const pusher = new Pusher("eb50313860f0fc342360", {
     cluster: "eu",
     encrypted: true
