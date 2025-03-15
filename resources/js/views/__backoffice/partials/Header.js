@@ -1,5 +1,6 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import Pusher from "pusher-js";
 
 import {
     AppBar,
@@ -61,7 +62,7 @@ const UserAvatar = props => {
                 fontSize: 17,
                 backgroundColor: RandomUtils.color(
                     user.firstname.length -
-                        user.created_at.charAt(user.created_at.length - 2),
+                    user.created_at.charAt(user.created_at.length - 2),
                 ),
             }}
         >
@@ -142,6 +143,58 @@ const LocaleMenu = props => {
                                         {Lang.get('navigation.filipino')}
                                     </Typography>
                                 </MenuItem>
+                            </MenuList>
+                        </ClickAwayListener>
+                    </Paper>
+                </Grow>
+            )}
+        </Popper>
+    );
+};
+
+const pusher = new Pusher("eb50313860f0fc342360", {
+    cluster: "eu",
+    encrypted: true
+});
+
+const NotificationsMenu = props => {
+    const { classes, notificationsMenuOpen, onNotificationsMenuToggle, notifications } = props;
+
+    return (
+        <Popper
+            open={notificationsMenuOpen}
+            className={classes.navLinkMenu}
+            transition
+            disablePortal
+        >
+            {({ TransitionProps, placement }) => (
+                <Grow
+                    {...TransitionProps}
+                    style={{
+                        transformOrigin:
+                            placement === 'bottom'
+                                ? 'center top'
+                                : 'center bottom',
+                    }}
+                >
+                    <Paper>
+                        <ClickAwayListener onClickAway={onNotificationsMenuToggle}>
+                            <MenuList>
+                                {notifications.length > 0 ? (
+                                    notifications.map((notification, index) => (
+                                        <MenuItem key={index}>
+                                            <Typography className='notification-item'>
+                                                {notification.message}
+                                            </Typography>
+                                        </MenuItem>
+                                    ))
+                                ) : (
+                                    <MenuItem>
+                                        <Typography>
+                                            Hiç bildirim yok.
+                                        </Typography>
+                                    </MenuItem>
+                                )}
                             </MenuList>
                         </ClickAwayListener>
                     </Paper>
@@ -297,6 +350,27 @@ function Header(props) {
             </IconButton>
         </Grid>
     );
+
+    const [notificationsMenuOpen, setNotificationsMenuOpen] = React.useState(false);
+
+    const handleNotificationsMenuToggle = () => {
+        setNotificationsMenuOpen(prev => !prev);
+    };
+
+    const [notifications, setNotifications] = useState([]);
+
+    useEffect(() => {
+        const channel = pusher.subscribe("notifications");
+
+        channel.bind("notifications-" + user.id, function (data) {
+            setNotifications(prevNotifications => [data, ...prevNotifications]);
+        });
+
+        return () => {
+            channel.unbind("notifications-" + user.id);
+            pusher.unsubscribe("notifications");
+        };
+    }, []);
 
     const renderNavigating = (
         <>
@@ -557,19 +631,24 @@ function Header(props) {
                         )}
 
                         <Grid item>
-                            <Tooltip
-                                title={Lang.get('navigation.notifications')}
-                            >
-                                <IconButton color="inherit">
-                                    <Badge
-                                        badgeContent={
-                                            new Date().getMinutes() + user.id
-                                        }
-                                        color="secondary"
-                                    >
-                                        <NotificationsIcon />
-                                    </Badge>
-                                </IconButton>
+                            <Tooltip title={Lang.get('navigation.notifications')}>
+                                <div className={classes.navLinkMenuWrapper}>
+                                    <IconButton color="inherit" onClick={handleNotificationsMenuToggle}>
+                                        <Badge
+                                            badgeContent={notifications.length}
+                                            color="secondary"
+                                        >
+                                            <NotificationsIcon />
+                                        </Badge>
+                                    </IconButton>
+
+                                    <NotificationsMenu
+                                        notificationsMenuOpen={notificationsMenuOpen}
+                                        onNotificationsMenuToggle={handleNotificationsMenuToggle}
+                                        classes={classes}
+                                        notifications={notifications}
+                                    />
+                                </div>
                             </Tooltip>
                         </Grid>
 

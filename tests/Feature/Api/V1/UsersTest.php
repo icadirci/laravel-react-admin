@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Api\V1;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\TestResponse;
@@ -185,7 +185,7 @@ class UsersTest extends BaseTest
     /**
      * Store a fake avatar.
      *
-     * @param App\User $user
+     * @param App\Models\User $user
      *
      * @return Illuminate\Foundation\Testing\TestResponse
      */

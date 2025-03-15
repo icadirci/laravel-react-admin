@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 |
 */
 
-$factory->define(App\User::class, function (Faker $faker) {
+$factory->define(App\Models\User::class, function (Faker $faker) {
     $gender = $faker->randomElements(['female', 'male'])[0];
 
     return [
